@@ -7,10 +7,10 @@ package model;
 public class Elevador {
 
     private int andar;
-    private String elevador;
+    private Character elevador;
     private String turno;
 
-    public Elevador(int andar, String elevador, String turno) {
+    public Elevador(int andar, Character elevador, String turno) {
         this.andar = andar;
         this.elevador = elevador;
         this.turno = turno;
@@ -20,7 +20,7 @@ public class Elevador {
         return andar;
     }
 
-    public String getElevador() {
+    public Character getElevador() {
         return elevador;
     }
 

@@ -18,10 +18,16 @@ import model.Elevador;
  */
 public class JsonReader {
 
-    public List<Elevador> readJson(String input) throws IOException {
+    public List<Elevador> readJson() {
+        String input = "input.json";
+        String output = "";
         List<Elevador> ListElevador = new ArrayList<>();
         Elevador el;
-        String output = String.join("", Files.readAllLines(Paths.get(input), StandardCharsets.UTF_8));
+        try {
+            output = String.join("", Files.readAllLines(Paths.get(input), StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            System.out.println("Erro ao ler arquivo json " + e);
+        }
         output = output.replaceAll(" ", "");
         JSONArray jsonArray = new JSONArray(output);
 
@@ -29,7 +35,8 @@ public class JsonReader {
 
             JSONObject obj = jsonArray.getJSONObject(i);
             int andar = obj.getInt("andar");
-            String elevador = obj.getString("elevador");
+            String elev = obj.getString("elevador");
+            Character elevador = elev.charAt(0);
             String turno = obj.getString("turno");
 
             el = new Elevador(andar, elevador, turno);
