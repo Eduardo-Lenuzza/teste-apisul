@@ -1,6 +1,5 @@
 package com.elopes.testeapisul;
 
-import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,10 +33,6 @@ public class IElevadorServiceDAO extends JsonReader implements IElevadorService 
         }
         Stream<Map.Entry<Integer, Integer>> sorted = toMap.entrySet().stream().sorted(Map.Entry.comparingByValue());
 
-        /*
-         * sorted.forEach(item -> { System.out.println(" Andar " + item.getKey() +
-         * " quantiddade " + item.getValue()); });
-         */
         sorted.forEach(item -> andaresOrdenados.add(item.getKey()));
 
         return andaresOrdenados;
@@ -61,58 +56,123 @@ public class IElevadorServiceDAO extends JsonReader implements IElevadorService 
 
         Stream<Map.Entry<Character, Integer>> sorted = toMap.entrySet().stream().sorted(Map.Entry.comparingByValue());
 
-        /*
-         * sorted.forEach(item -> { System.out.println(" Elevador " + item.getKey() +
-         * " quantiddade " + item.getValue()); });
-         */
         sorted.forEach(item -> elevadoresOrdenados.add(item.getKey()));
+        Collections.reverse(elevadoresOrdenados);
 
         return elevadoresOrdenados;
     }
 
     @Override
     public List<Character> periodoMaiorFluxoElevadorMaisFrequentado() {
-        return null;
+        char elevadorMaisFreq = this.elevadorMaisFrequentado().get(0);
+        List<Character> listTurno = this.turnoFrequencia(elevadorMaisFreq);
+
+        Collections.reverse(listTurno);
+
+        return listTurno;
     }
 
     @Override
     public List<Character> elevadorMenosFrequentado() {
-        return null;
+        List<Character> elevMenosFreq = new ArrayList<>();
+        elevMenosFreq = this.elevadorMaisFrequentado();
+
+        Collections.reverse(elevMenosFreq);
+
+        return elevMenosFreq;
     }
 
     @Override
     public List<Character> periodoMenorFluxoElevadorMenosFrequentado() {
-        return null;
+        char elevadorMenosFreq = this.elevadorMenosFrequentado().get(0);
+        List<Character> listTurno = this.turnoFrequencia(elevadorMenosFreq);
+
+        return listTurno;
     }
 
     @Override
     public List<Character> periodoMaiorUtilizacaoConjuntoElevadores() {
-        return null;
+        List<Character> listTurno = this.turnoFrequencia(' ');
+
+        Collections.reverse(listTurno);
+
+        return listTurno;
     }
 
     @Override
     public float percentualDeUsoElevadorA() {
-        return 0;
+        return calculaPercentual('A');
     }
 
     @Override
     public float percentualDeUsoElevadorB() {
-        return 0;
+        return calculaPercentual('B');
     }
 
     @Override
     public float percentualDeUsoElevadorC() {
-        return 0;
+        return calculaPercentual('C');
     }
 
     @Override
     public float percentualDeUsoElevadorD() {
-        return 0;
+        return calculaPercentual('D');
     }
 
     @Override
     public float percentualDeUsoElevadorE() {
-        return 0;
+        return calculaPercentual('E');
+    }
+
+    public void getMensagem(String mensagem) {
+        System.out.println("\n=====================================================");
+        if (!mensagem.equals(" "))
+            System.out.println(mensagem);
+    }
+
+    private List<Character> turnoFrequencia(char elevador) {
+        List<Elevador> listElev = readJson();
+        List<Character> listTurno = new ArrayList<>();
+        Map<Character, Integer> turnoFrequencia = new HashMap<>();
+        if (elevador != ' ') {
+            listElev.stream().filter(item -> item.getElevador().equals(elevador))
+                    .forEach(e -> listTurno.add(e.getTurno()));
+        } else {
+            listElev.stream().forEach(item -> listTurno.add(item.getTurno()));
+        }
+
+        turnoFrequencia.put('M', Collections.frequency(listTurno, 'M'));
+        turnoFrequencia.put('N', Collections.frequency(listTurno, 'N'));
+        turnoFrequencia.put('V', Collections.frequency(listTurno, 'V'));
+
+        Stream<Map.Entry<Character, Integer>> sorted = turnoFrequencia.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue());
+        listTurno.clear();
+
+        sorted.forEach(item -> listTurno.add(item.getKey()));
+
+        return listTurno;
+    }
+
+    private float calculaPercentual(char elevador) {
+        List<Elevador> listElev = readJson();
+        List<Character> elev = new ArrayList<>();
+        int total_de_uso_totos;
+        float total_de_uso_cada;
+        String percentualFormatado;
+
+        listElev.stream().forEach(item -> elev.add(item.getElevador()));
+        total_de_uso_totos = elev.size();
+
+        total_de_uso_cada = Collections.frequency(elev, elevador);
+
+        total_de_uso_cada = (total_de_uso_cada * 100) / total_de_uso_totos;
+
+        percentualFormatado = String.format("%.2f", total_de_uso_cada);
+
+        total_de_uso_cada = Float.valueOf(percentualFormatado.replaceAll(",", "."));
+
+        return total_de_uso_cada;
     }
 
 }

@@ -1,6 +1,5 @@
 package comum;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,7 +36,8 @@ public class JsonReader {
             int andar = obj.getInt("andar");
             String elev = obj.getString("elevador");
             Character elevador = elev.charAt(0);
-            String turno = obj.getString("turno");
+            String turn = obj.getString("turno");
+            Character turno = turn.charAt(0);
 
             el = new Elevador(andar, elevador, turno);
             ListElevador.add(el);

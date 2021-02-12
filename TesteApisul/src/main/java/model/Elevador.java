@@ -8,9 +8,9 @@ public class Elevador {
 
     private int andar;
     private Character elevador;
-    private String turno;
+    private Character turno;
 
-    public Elevador(int andar, Character elevador, String turno) {
+    public Elevador(int andar, Character elevador, Character turno) {
         this.andar = andar;
         this.elevador = elevador;
         this.turno = turno;
@@ -24,7 +24,7 @@ public class Elevador {
         return elevador;
     }
 
-    public String getTurno() {
+    public Character getTurno() {
         return turno;
     }
 
